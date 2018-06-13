@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 @Service
 public class FileSystemStorageService implements StorageService {
 
-    private final String ROOT_LOCATION = "upload-dir";
+    private final String ROOT_LOCATION = "./upload-dir";
 
     private final Path root;
 

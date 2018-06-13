@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class FileSystemStorageServiceTest {
 
-    final Path root = Paths.get("upload-dir");
+    final Path root = Paths.get("./upload-dir");
 
     FileSystemStorageService service;
 
