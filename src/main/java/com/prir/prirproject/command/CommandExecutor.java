@@ -5,13 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CommandExecutor {
 
     private List<String> results = new ArrayList<>();
     private BufferedReader stdInput;
-    private BufferedReader stdError;
+//    private BufferedReader stdError;
 
     public void executeCommand(List<String> command) {
 
@@ -32,15 +31,22 @@ public class CommandExecutor {
     }
 
     public int getResult() {
-        return Integer.valueOf(results.get(0));
+        int result = 0;
+        for (int i=0; i<results.size(); i=i+2) {
+            result += Integer.valueOf(results.get(i));
+        }
+        return result;
     }
 
     public List<Integer> getPositions() {
         List<Integer> intPositions = new ArrayList<>();
-        String positions = results.get(1);
-        String positionsSubstring = positions.substring(1, positions.length()-1);
+        StringBuilder positions = new StringBuilder();
+        for (int i=1; i<results.size(); i=i+2) {
+            positions.append(results.get(i));
+            positions.append(" ");
+        }
 
-        for (String num : positionsSubstring.split(" ")) {
+        for (String num : positions.toString().split(" ")) {
             intPositions.add(Integer.valueOf(num));
         }
 
