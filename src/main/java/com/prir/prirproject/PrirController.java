@@ -4,7 +4,6 @@ import com.prir.prirproject.command.CommandExecutor;
 import com.prir.prirproject.domain.FileParam;
 import com.prir.prirproject.domain.RunParams;
 import com.prir.prirproject.parser.PdfParserService;
-import com.prir.prirproject.parser.ResultParserService;
 import com.prir.prirproject.storage.FileNotFoundException;
 import com.prir.prirproject.storage.StorageService;
 import org.apache.commons.io.FilenameUtils;
@@ -29,14 +28,10 @@ public class PrirController {
 
     private final StorageService storageService;
     private final PdfParserService pdfParserService;
-    private final ResultParserService resultParserService;
 
-    public PrirController(StorageService storageService,
-                          PdfParserService pdfParserService,
-                          ResultParserService resultParserService) {
+    public PrirController(StorageService storageService, PdfParserService pdfParserService) {
         this.storageService = storageService;
         this.pdfParserService = pdfParserService;
-        this.resultParserService = resultParserService;
     }
 
     @GetMapping
@@ -102,10 +97,6 @@ public class PrirController {
         ).collect(Collectors.toList());
 
         executor.executeCommand(command);
-
-        String resultFilename = resultParserService.parseResult(
-                runParams.getSelectedFilename(), runParams.getSearchedText(),
-                executor.getPatternLength(), executor.getPositions());
 
         redirectAttributes.addFlashAttribute("info",
                 "Your result: " + executor.getResult());

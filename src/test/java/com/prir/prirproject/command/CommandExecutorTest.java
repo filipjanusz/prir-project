@@ -22,13 +22,6 @@ public class CommandExecutorTest {
         executor.executeCommand(command);
 
 
-        assertThat(executor.getPatternLength()).isEqualTo(3);
-        assertThat(executor.getResult()).isEqualTo(30);
-        assertThat(executor.getPositions().get(0)).isEqualTo(6);
-        assertThat(executor.getPositions().get(1)).isEqualTo(557);
-        assertThat(executor.getPositions().get(2)).isEqualTo(1362);
-        assertThat(executor.getPositions().get(3)).isEqualTo(7);
-        assertThat(executor.getPositions().get(4)).isEqualTo(22);
-        assertThat(executor.getPositions().get(5)).isEqualTo(362);
+        assertThat(executor.getResult()).isEqualTo(3);
     }
 }
