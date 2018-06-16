@@ -53,7 +53,7 @@
                 <form th:action="@{/prir/files/run}" th:object="${runParams}" method="POST">
                     <select class="custom-select" th:field="*{selectedFilename}" title="Select file..." id="select" name="select" required="true">
                         <option value="">Select file...</option>
-                        <option th:each="filename : ${filenames}" th:value="${filename}" th:text="${filename}"></option>
+                        <option th:each="file : ${files}" th:value="${file.filename}" th:text="${file.filename}"></option>
                     </select>
                     <br/>
                     <div class="input-group mb-3">
@@ -84,9 +84,8 @@
                 <br/>
                 <div>
                     <ul class="list-group">
-                        <li class="list-group-item" th:each="filename : ${filenames}">
-                            <!--<a th:href="${filename}" th:text="${filename}" />-->
-                            <span th:text="${filename}"/>
+                        <li class="list-group-item" th:each="file : ${files}">
+                            <a th:href="${file.fileuri}" th:text="${file.filename}" />
                         </li>
                     </ul>
                 </div>

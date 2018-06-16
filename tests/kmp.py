@@ -75,6 +75,7 @@ def find_pattern(pattern, filepath, print_result=False):
       print("[]")
   elif(filepath == ".\\tests\\test1.txt"):
     if(pattern == "lol"):
+      print(3)
       print(13)
       print("6 557 1362")
       print(17)

@@ -30,9 +30,13 @@ public class CommandExecutor {
         }
     }
 
+    public int getPatternLength() {
+        return Integer.valueOf(results.get(0));
+    }
+
     public int getResult() {
         int result = 0;
-        for (int i=0; i<results.size(); i=i+2) {
+        for (int i=1; i<results.size(); i=i+2) {
             result += Integer.valueOf(results.get(i));
         }
         return result;
@@ -41,7 +45,7 @@ public class CommandExecutor {
     public List<Integer> getPositions() {
         List<Integer> intPositions = new ArrayList<>();
         StringBuilder positions = new StringBuilder();
-        for (int i=1; i<results.size(); i=i+2) {
+        for (int i=2; i<results.size(); i=i+2) {
             positions.append(results.get(i));
             positions.append(" ");
         }

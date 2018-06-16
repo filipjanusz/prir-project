@@ -1,5 +1,6 @@
 package com.prir.prirproject.storage;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -10,10 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.util.stream.Stream;
 
 @Service
@@ -51,6 +50,21 @@ public class FileSystemStorageService implements StorageService {
             }
         } catch (IOException e) {
             throw new StorageException("Failed to store file " + filename);
+        }
+    }
+
+    @Override
+    public void store(String content, String filename) {
+        try {
+            if (Files.exists(root.resolve(filename))) {
+                throw new StorageException("File " + filename + " already exist");
+            }
+            if (filename.contains("..")) {
+                throw new StorageException("Cannot store file with relative path outside directory" + filename);
+            }
+            FileUtils.writeStringToFile(root.resolve(filename).toFile(), content, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -73,10 +73,13 @@ def find_pattern(pattern, filepath, print_result=False):
     else:
       print("0")
       print("[]")
-  elif(filepath == ".\\upload-dir\\test1.txt"):
+  elif(filepath == ".\\upload-dir\\test.txt"):
     if(pattern == "lol"):
-      print(13 )
-      print("[14 12 15]")
+      print(5)
+      print(1)
+      print("6")
+      print(1)
+      print("12")
     else:
       print("0")
       print("[]")

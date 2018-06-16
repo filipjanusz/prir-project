@@ -1,8 +1,10 @@
 package com.prir.prirproject;
 
 import com.prir.prirproject.command.CommandExecutor;
+import com.prir.prirproject.domain.FileParam;
 import com.prir.prirproject.domain.RunParams;
 import com.prir.prirproject.parser.PdfParserService;
+import com.prir.prirproject.parser.ResultParserService;
 import com.prir.prirproject.storage.FileNotFoundException;
 import com.prir.prirproject.storage.StorageService;
 import org.apache.commons.io.FilenameUtils;
@@ -27,24 +29,31 @@ public class PrirController {
 
     private final StorageService storageService;
     private final PdfParserService pdfParserService;
+    private final ResultParserService resultParserService;
 
-    public PrirController(StorageService storageService, PdfParserService pdfParserService) {
+    public PrirController(StorageService storageService,
+                          PdfParserService pdfParserService,
+                          ResultParserService resultParserService) {
         this.storageService = storageService;
         this.pdfParserService = pdfParserService;
+        this.resultParserService = resultParserService;
     }
 
     @GetMapping
     public String listUploadedFiles(Model model) {
-        model.addAttribute("runParams", new RunParams());
-        model.addAttribute("files", storageService.loadAll().map(
-                path -> MvcUriComponentsBuilder.fromMethodName(PrirController.class,
-                        "serveFile", path.getFileName().toString()).build().toString())
-                .collect(Collectors.toList()));
 
-        model.addAttribute("filenames", storageService.loadAll()
+        List<FileParam> files = storageService.loadAll()
                 .filter(path -> path.toFile().getAbsolutePath().endsWith("txt"))
-                .map(path -> path.getFileName().toString())
-                .collect(Collectors.toList()));
+                .map(path -> {
+                    FileParam file = new FileParam();
+                    file.setFilename(path.getFileName().toString());
+                    file.setFileuri(MvcUriComponentsBuilder.fromMethodName(PrirController.class,
+                            "serveFile", path.getFileName().toString()).build().toString());
+                    return file;
+                }
+        ).collect(Collectors.toList());
+        model.addAttribute("files", files);
+        model.addAttribute("runParams", new RunParams());
 
         return "uploadForm";
     }
@@ -54,7 +63,7 @@ public class PrirController {
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         Resource file = storageService.loadAsResource(filename);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"")
+                "inline; filename=\"" + file.getFilename() + "\"")
                 .body(file);
     }
 
@@ -94,8 +103,12 @@ public class PrirController {
 
         executor.executeCommand(command);
 
+        String resultFilename = resultParserService.parseResult(
+                runParams.getSelectedFilename(), runParams.getSearchedText(),
+                executor.getPatternLength(), executor.getPositions());
+
         redirectAttributes.addFlashAttribute("info",
-                "Your result: " + executor.getResult() + " Positions: " + executor.getPositions());
+                "Your result: " + executor.getResult());
 
         return "redirect:/prir/files";
     }

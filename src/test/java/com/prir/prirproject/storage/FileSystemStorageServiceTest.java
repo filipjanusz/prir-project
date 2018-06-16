@@ -58,6 +58,14 @@ public class FileSystemStorageServiceTest {
     }
 
     @Test
+    public void saveAndLoad2() {
+        service.store("Content", "test1.txt");
+
+        assertThat(service.load("test1.txt")).exists();
+        assertThat(service.load("test1.txt")).isEqualTo(Paths.get(root + "/test1.txt"));
+    }
+
+    @Test
     public void saveAndLoadAsResource() {
         service.store(new MockMultipartFile("file",
                 "file.txt",
